@@ -19,6 +19,12 @@ export class UserEntity {
   @Column("text")
   password: string;
 
+  @Column({
+    type: "int",
+    nullable: true,
+  })
+  totalScore: number;
+
   @CreateDateColumn()
   createdAt: Date;
 }

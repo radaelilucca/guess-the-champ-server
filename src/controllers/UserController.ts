@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { CreateUserService } from "../services/users/CreateUser";
 import * as yup from "yup";
+import { CreateUserService } from "../services";
 import { verbose } from "../utils";
 
 const createValidationSchema = yup.object().shape({

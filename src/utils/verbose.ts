@@ -22,7 +22,7 @@ const logger = (props: ILoggerProps) => {
 
   const { title, id, data, isError } = props;
 
-  const message = `${title} ${id ? id : ""}`;
+  const message = `${title} ${id ? id : ""}:`;
 
   if (isError) return console.error(message, data);
 
