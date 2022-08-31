@@ -14,7 +14,11 @@ class Middleware {
 
       const decodedToken = jwt.verify(token, tokenKey) as JwtPayload;
 
-      if (decodedToken) return next();
+      if (decodedToken) {
+        req.headers.userId = decodedToken.userId;
+
+        return next();
+      }
 
       throw "Invalid token";
     } catch (error) {
