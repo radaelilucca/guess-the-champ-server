@@ -3,7 +3,7 @@ import { UserController } from "../controllers";
 
 const userRoutes = Router();
 
-userRoutes.post("/register", (req, res) => {
+userRoutes.post("/sign-up", (req, res) => {
   UserController.create(req, res);
 });
 

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import * as yup from "yup";
-import { CreateUserService } from "../services";
+import { CreateSessionService, CreateUserService } from "../services";
 import { verbose } from "../utils";
 
 const createValidationSchema = yup.object().shape({
@@ -31,12 +31,20 @@ class UserController {
 
     try {
       const newUser = await CreateUserService.execute({ username, password });
-      return res.json({ newUser });
-    } catch (error) {
-      verbose.error({ id: "User controller - create", data: error });
+
+      const session = await CreateSessionService.execute({
+        user: newUser,
+      });
+
+      return res.json(session);
+    } catch (error: any) {
+      const errorMessage = error.includes("exists")
+        ? "Username already taken"
+        : error;
+      verbose.error({ id: "User controller - create", data: errorMessage });
       return res
         .status(400)
-        .json({ error: "Error on user creation", details: error });
+        .json({ error: "Error on user creation", details: errorMessage });
     }
   }
 }

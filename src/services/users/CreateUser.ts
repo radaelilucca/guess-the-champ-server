@@ -20,8 +20,8 @@ class Service {
     const newUser = { ...baseUser, username, password: encryptedPassword };
 
     try {
-      const user = await usersRepository.save(newUser);
-      return user;
+      const createdUser = await usersRepository.save(newUser);
+      return createdUser;
     } catch (error: any) {
       verbose.error({ id: "Create user service", data: error });
       throw error.detail;

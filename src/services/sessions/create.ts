@@ -1,41 +1,53 @@
 import jwt from "jsonwebtoken";
+import { UserEntity } from "../../database/entities";
 
 import { usersRepository } from "../../database/repositories";
-import { DecryptService, EncryptService } from "../encryption";
+import { DecryptService } from "../encryption";
 
 interface ICreateSessionDTO {
-  username: string;
-  password: string;
+  username?: string;
+  password?: string;
+  user?: UserEntity;
 }
 
 class Service {
-  async execute({ username, password }: ICreateSessionDTO) {
-    const user = await usersRepository.findOneBy({ username });
+  async execute({ username, password, user }: ICreateSessionDTO) {
+    const userData = user || (await usersRepository.findOneBy({ username }));
 
-    if (!user) throw new Error("User not found");
+    if (!userData) throw new Error("User not found");
 
-    const decryptedPassword = DecryptService.execute({
-      encryptedText: user.password,
-      customKey: password,
-    });
+    if (!user) {
+      if (!username || !password) throw new Error("Missing required fields");
 
-    const validLogin = decryptedPassword === password;
+      const decryptedPassword = DecryptService.execute({
+        encryptedText: userData.password,
+        customKey: password,
+      });
 
-    if (!validLogin) throw "Invalid password";
+      const validLogin = decryptedPassword === password;
+
+      if (!validLogin) throw "Invalid password";
+    }
 
     const tokenKey = process.env.JWT_PRIVATE_KEY ?? "";
 
-    const userData = {
-      username: user.username,
-      id: user.id,
+    const payload = {
+      username: userData.username,
+      id: userData.id,
     };
 
-    const token = jwt.sign({ userId: user.id }, tokenKey, {
+    const token = jwt.sign({ userId: payload.id, username }, tokenKey, {
       algorithm: "HS256",
       expiresIn: Math.floor(Date.now() / 1000) + 60 * 60,
     });
 
-    return { token, user: userData };
+    return {
+      token,
+      user: {
+        id: userData.id,
+        username: userData.username,
+      },
+    };
   }
 }
 
