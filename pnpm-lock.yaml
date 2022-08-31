@@ -5,6 +5,7 @@ specifiers:
   '@types/crypto-js': ^4.1.1
   '@types/express': ^4.17.13
   '@types/jest': ^28.1.7
+  '@types/jsonwebtoken': ^8.5.9
   '@types/node': ^18.7.8
   '@typescript-eslint/eslint-plugin': ^5.33.1
   '@typescript-eslint/parser': ^5.33.1
@@ -43,6 +44,7 @@ devDependencies:
   '@types/crypto-js': 4.1.1
   '@types/express': 4.17.13
   '@types/jest': 28.1.7
+  '@types/jsonwebtoken': 8.5.9
   '@types/node': 18.7.8
   '@typescript-eslint/eslint-plugin': 5.33.1_vsoshirnpb7xw6mr7xomgfas2i
   '@typescript-eslint/parser': 5.33.1_4rv7y5c6xz3vfxwhbrcxxi73bq
@@ -901,6 +903,12 @@ packages:
 
   /@types/json-schema/7.0.11:
     resolution: {integrity: sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==}
+    dev: true
+
+  /@types/jsonwebtoken/8.5.9:
+    resolution: {integrity: sha512-272FMnFGzAVMGtu9tkr29hRL6bZj4Zs1KZNeHLnKqAvp06tAIcarTMwOh8/8bz4FmKRcMxZhZNeUAQsNLoiPhg==}
+    dependencies:
+      '@types/node': 18.7.8
     dev: true
 
   /@types/lodash/4.14.184:
