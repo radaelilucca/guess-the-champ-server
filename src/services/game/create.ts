@@ -1,11 +1,18 @@
-import { DATA_DRAGON, guessingModes } from "../../../const";
-import { ChampionsController } from "../../../controllers";
-import { MatchDataType } from "../../../types/shared";
-import { getRandomIntInRange } from "../../../utils";
-import { GetRandomGameQuestionService } from "../getQuestion";
+import { DATA_DRAGON, guessingModes } from "./../../const";
+import { ChampionsController } from "./../../controllers";
+import { MatchEntity } from "./../../database/entities";
+import { matchesRepository } from "./../../database/repositories";
+import { MatchDataType } from "./../../types/shared";
+import { getRandomIntInRange } from "./../../utils";
+import { EncryptService } from "./../encryption";
+import { FinishMatchService } from "./finish";
+import { GetRandomGameQuestionService } from "./getQuestion";
 
+interface ICreateNewGameProps {
+  userId: string;
+}
 class Service {
-  async createNewGame() {
+  async createNewGame({ userId }: ICreateNewGameProps) {
     const randomChampionData =
       await ChampionsController.getRandomChampionData();
 
@@ -73,9 +80,29 @@ class Service {
       gameplayTips,
     } as MatchDataType;
 
-    // TODO: ENCRYPT GAME BEFORE SEND TO FRONTEND
+    const persistedMatch: Partial<MatchEntity> = {
+      champion: champion.name,
+      mode: guessingMode.name,
+      subMode: guessingMode.subMode,
+      score: 0,
+      userId,
+      randomAbilityId: randomAbility.id,
+      status: "in-progress",
+    };
 
-    return newGame;
+    const inProgressMatch = await matchesRepository.findOne({
+      where: { status: "in-progress" },
+    });
+
+    if (inProgressMatch) {
+      await FinishMatchService.execute({ id: inProgressMatch.id });
+    }
+
+    await matchesRepository.save(persistedMatch);
+
+    const encryptedGame = EncryptService.execute({ data: newGame });
+
+    return encryptedGame;
   }
 }
 

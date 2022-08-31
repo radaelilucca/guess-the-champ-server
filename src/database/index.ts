@@ -1,5 +1,5 @@
 import { DataSource } from "typeorm";
-import { UserEntity } from "./entities";
+import { MatchEntity, UserEntity } from "./entities";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -10,7 +10,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DATABASE_DATABASE,
   synchronize: process.env.MODE === "development",
   logging: true,
-  entities: [UserEntity],
+  entities: [UserEntity, MatchEntity],
   subscribers: [],
   migrations: [],
 });

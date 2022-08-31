@@ -1,11 +1,11 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import { CreateGameService } from "../services";
 
 class GameController {
-  async create({ res }: { res: Response }) {
-    //TODO: GER USER FROM TOKEN;
-
-    const newGame = await CreateGameService.createNewGame();
+  async create(req: Request, res: Response) {
+    const newGame = await CreateGameService.createNewGame({
+      userId: req.headers.userId as string,
+    });
 
     return res.json({ game: newGame });
   }
