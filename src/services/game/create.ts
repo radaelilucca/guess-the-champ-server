@@ -71,7 +71,7 @@ class Service {
 
     const question = GetRandomGameQuestionService.execute(guessingMode.name);
 
-    const newGame = {
+    const gameData = {
       champion,
       guessingMode,
       question,
@@ -80,11 +80,11 @@ class Service {
       gameplayTips,
     } as MatchDataType;
 
-    const persistedMatch: Partial<MatchEntity> = {
-      champion: champion.name,
+    const match: Partial<MatchEntity> = {
+      champion: champion.name.toLowerCase(),
       mode: guessingMode.name,
       subMode: guessingMode.subMode,
-      score: 0,
+      score: 3,
       userId,
       randomAbilityId: randomAbility.id,
       status: "in-progress",
@@ -98,11 +98,11 @@ class Service {
       await FinishMatchService.execute({ id: inProgressMatch.id });
     }
 
-    await matchesRepository.save(persistedMatch);
+    const persistedMatch = await matchesRepository.save(match);
 
-    const encryptedGame = EncryptService.execute({ data: newGame });
+    const encryptedGame = EncryptService.execute({ data: gameData });
 
-    return encryptedGame;
+    return { matchData: encryptedGame, matchId: persistedMatch.id };
   }
 }
 
