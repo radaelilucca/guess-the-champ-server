@@ -16,11 +16,11 @@ class GameController {
     const { champion } = req.body;
 
     try {
-      const { isCorrect } = await GuessService.execute({
+      const { isCorrect, matchScore } = await GuessService.execute({
         matchId: matchId,
         championName: champion,
       });
-      return res.json({ isCorrect });
+      return res.json({ isCorrect, matchScore });
     } catch (error) {
       return res.status(400).json({ error });
     }

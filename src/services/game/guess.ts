@@ -28,6 +28,7 @@ class Service {
         match.status = "finished";
 
         const user = await usersRepository.findOneBy({ id: match.userId });
+
         if (user) {
           user.totalScore += matchScore;
           await usersRepository.save(user);
@@ -41,7 +42,7 @@ class Service {
 
       await matchesRepository.save(match);
 
-      return { isCorrect };
+      return { isCorrect, matchScore: match.score };
     } catch (error) {
       verbose.error({ id: "Error on Guess service", data: error });
       throw error;
