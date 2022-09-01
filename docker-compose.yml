@@ -1,0 +1,22 @@
+version: "3.9"
+
+volumes:
+  postgres:
+
+services:
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: docker
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+  api:
+    build: .
+    ports:
+      - 4000:4000
+    env_file:
+      - .env.prod
