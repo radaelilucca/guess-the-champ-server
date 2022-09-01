@@ -1,14 +1,22 @@
 {
-  "name": "who-is-server",
+  "name": "guess-the-champ-server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
     "test": "jest",
     "dev": "nodemon",
+    "prod": "pnpm run build && cp .env.prod ./build/.env && cat ./build/.env && node ./build/server.js",
     "build": "rimraf ./build && tsc",
+    "tsc": "tsc",
     "start": "npm run build && node build/index.js",
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint . --ext .ts",
+    "db:mig:create": "node ./scripts/migration-create.js",
+    "db:mig:run": "node ./scripts/migrations-run.js",
+    "db:mig:rb": "node ./scripts/migrations-rollback.js",
+    "docker:compose:local": "docker compose --env-file .env.local up",
+    "docker:compose:prod": "docker compose --env-file .env.prod up"
   },
   "keywords": [],
   "author": "",
@@ -28,6 +36,7 @@
     "rimraf": "^3.0.2",
     "ts-jest": "^28.0.8",
     "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.1.0",
     "typescript": "^4.7.4"
   },
   "dependencies": {
