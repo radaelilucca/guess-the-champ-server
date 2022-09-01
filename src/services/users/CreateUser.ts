@@ -17,7 +17,12 @@ class Service {
 
     const baseUser = new UserEntity();
 
-    const newUser = { ...baseUser, username, password: encryptedPassword };
+    const newUser = {
+      ...baseUser,
+      username,
+      password: encryptedPassword,
+      totalScore: 0,
+    };
 
     try {
       const createdUser = await usersRepository.save(newUser);

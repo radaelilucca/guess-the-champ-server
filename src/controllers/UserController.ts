@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import * as yup from "yup";
+import { UserEntity } from "../database/entities";
+import { usersRepository } from "../database/repositories";
 import { CreateSessionService, CreateUserService } from "../services";
 import { verbose } from "../utils";
 
@@ -46,6 +48,23 @@ class UserController {
         .status(400)
         .json({ error: "Error on user creation", details: errorMessage });
     }
+  }
+
+  async find(req: Request, res: Response) {
+    console.log(req.query, req.params);
+
+    const { id } = req.params;
+
+    if (!id) throw new Error("Missing user Id");
+
+    const userData: Partial<UserEntity> | null =
+      await usersRepository.findOneBy({ id });
+
+    if (!userData) throw new Error("User not found");
+
+    delete userData.password;
+
+    return res.json({ user: userData });
   }
 }
 
