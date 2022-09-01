@@ -9,5 +9,6 @@ app.listen(port, async () => {
 
   verbose.success({
     data: `Server is running on port: ${port}`,
+    allowProd: true,
   });
 });
