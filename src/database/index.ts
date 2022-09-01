@@ -1,10 +1,6 @@
 import { DataSource } from "typeorm";
 import { MatchEntity, UserEntity } from "./entities";
 
-const migrationsPath = `src/database/migrations/**/*.${
-  process.env.MODE === "development" ? "ts" : "js"
-}`;
-
 export const AppDataSource = new DataSource({
   type: "postgres",
   host: process.env.DATABASE_HOST,
@@ -15,5 +11,6 @@ export const AppDataSource = new DataSource({
   synchronize: false,
   logging: true,
   entities: [UserEntity, MatchEntity],
-  migrations: [migrationsPath],
+  //TODO: check this path
+  migrations: ["src/database/migrations/**/*.ts"],
 });
