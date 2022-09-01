@@ -51,20 +51,22 @@ class UserController {
   }
 
   async find(req: Request, res: Response) {
-    console.log(req.query, req.params);
-
     const { id } = req.params;
 
-    if (!id) throw new Error("Missing user Id");
+    try {
+      if (!id) throw "Missing user Id";
 
-    const userData: Partial<UserEntity> | null =
-      await usersRepository.findOneBy({ id });
+      const userData: Partial<UserEntity> | null =
+        await usersRepository.findOneBy({ id });
 
-    if (!userData) throw new Error("User not found");
+      if (!userData) throw "User not found";
 
-    delete userData.password;
+      delete userData.password;
 
-    return res.json({ user: userData });
+      return res.json({ user: userData });
+    } catch (error) {
+      return res.json({ error: "Error on Find user", details: error });
+    }
   }
 }
 
