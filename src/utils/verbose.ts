@@ -1,6 +1,7 @@
 interface IVerboseProps {
   data: unknown;
   id?: string;
+  allowProd?: boolean;
 }
 
 const isDev = process.env.MODE === "development";
@@ -18,7 +19,7 @@ const titles = {
 };
 
 const logger = (props: ILoggerProps) => {
-  if (!isDev) return;
+  if (!isDev && !props.allowProd) return;
 
   const { title, id, data, isError } = props;
 
