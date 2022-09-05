@@ -12,5 +12,5 @@ export const AppDataSource = new DataSource({
   logging: true,
   entities: [UserEntity, MatchEntity],
   //TODO: check this path
-  migrations: ["src/database/migrations/**/*.js"],
+  migrations: ["src/database/migrations/**/*.ts"],
 });

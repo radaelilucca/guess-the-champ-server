@@ -19,7 +19,7 @@
     "docker:compose:prod": "docker compose --env-file .env.prod up"
   },
   "keywords": [],
-  "author": "",
+  "author": "Lucca Radaeli",
   "license": "ISC",
   "devDependencies": {
     "@types/cors": "^2.8.12",
