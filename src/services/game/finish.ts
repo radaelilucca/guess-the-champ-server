@@ -6,13 +6,13 @@ interface IFinishServiceProps {
 
 class Service {
   async execute({ id }: IFinishServiceProps) {
-    const match = await matchesRepository.findOneBy({ id });
+    const match = await matchesRepository.singlePlayer.findOneBy({ id });
 
     try {
       if (match) {
         match.status = "finished";
 
-        await matchesRepository.save(match);
+        await matchesRepository.singlePlayer.save(match);
       }
     } catch (error) {
       throw "Match not found";

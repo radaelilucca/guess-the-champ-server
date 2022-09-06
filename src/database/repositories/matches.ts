@@ -1,6 +1,11 @@
 import { AppDataSource } from "..";
-import { MatchEntity } from "../entities";
+import { MultiplayerMatchEntity } from "../entities";
 
-const matchesRepository = AppDataSource.getRepository(MatchEntity);
+import { SinglePlayerMachEntity } from "../entities/SinglePlayerMatch";
+
+const matchesRepository = {
+  singlePlayer: AppDataSource.getRepository(SinglePlayerMachEntity),
+  multiplayer: AppDataSource.getRepository(MultiplayerMatchEntity),
+};
 
 export { matchesRepository };

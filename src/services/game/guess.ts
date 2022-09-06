@@ -1,7 +1,4 @@
-import {
-  matchesRepository,
-  usersRepository,
-} from "../../database/repositories";
+import { matchesRepository } from "../../database/repositories";
 import { verbose } from "../../utils";
 
 interface IGuessServiceProps {
@@ -12,7 +9,9 @@ interface IGuessServiceProps {
 class Service {
   async execute({ matchId, championName }: IGuessServiceProps) {
     try {
-      const match = await matchesRepository.findOneBy({ id: matchId });
+      const match = await matchesRepository.singlePlayer.findOneBy({
+        id: matchId,
+      });
 
       if (!match) throw "Match not found";
 
@@ -27,12 +26,14 @@ class Service {
       if (isCorrect) {
         match.status = "finished";
 
-        const user = await usersRepository.findOneBy({ id: match.userId });
+        //TODO: UPDATE WINNER`S SCORE
 
-        if (user) {
-          user.totalScore += matchScore;
-          await usersRepository.save(user);
-        }
+        // const user = await usersRepository.findOneBy({ id: match.userId });
+
+        // if (user) {
+        //   user.totalScore += matchScore;
+        //   await usersRepository.save(user);
+        // }
       } else {
         if (matchScore !== 1) {
           const newMatchScore = matchScore - 1;
@@ -40,7 +41,7 @@ class Service {
         }
       }
 
-      await matchesRepository.save(match);
+      await matchesRepository.singlePlayer.save(match);
 
       return { isCorrect, matchScore: match.score };
     } catch (error) {

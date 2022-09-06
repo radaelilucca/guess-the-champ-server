@@ -1,6 +1,6 @@
 import { DATA_DRAGON, guessingModes } from "./../../const";
 import { ChampionsController } from "./../../controllers";
-import { MatchEntity } from "./../../database/entities";
+import { SinglePlayerMachEntity } from "./../../database/entities";
 import { matchesRepository } from "./../../database/repositories";
 import { MatchDataType } from "./../../types/shared";
 import { getRandomIntInRange } from "./../../utils";
@@ -8,11 +8,8 @@ import { EncryptService } from "./../encryption";
 import { FinishMatchService } from "./finish";
 import { GetRandomGameQuestionService } from "./getQuestion";
 
-interface ICreateNewGameProps {
-  userId: string;
-}
 class Service {
-  async createNewGame({ userId }: ICreateNewGameProps) {
+  async createNewGame({ userId }: { userId: string }) {
     const randomChampionData =
       await ChampionsController.getRandomChampionData();
 
@@ -80,17 +77,17 @@ class Service {
       gameplayTips,
     } as MatchDataType;
 
-    const match: Partial<MatchEntity> = {
+    const match: Partial<SinglePlayerMachEntity> = {
       champion: champion.name.toLowerCase(),
       mode: guessingMode.name,
       subMode: guessingMode.subMode,
       score: 3,
-      userId,
       randomAbilityId: randomAbility.id,
       status: "in-progress",
+      userId,
     };
 
-    const inProgressMatch = await matchesRepository.findOne({
+    const inProgressMatch = await matchesRepository.singlePlayer.findOne({
       where: { status: "in-progress" },
     });
 
@@ -98,7 +95,7 @@ class Service {
       await FinishMatchService.execute({ id: inProgressMatch.id });
     }
 
-    const persistedMatch = await matchesRepository.save(match);
+    const persistedMatch = await matchesRepository.singlePlayer.save(match);
 
     const encryptedGame = EncryptService.execute({ data: gameData });
 

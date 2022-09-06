@@ -1,16 +1,6 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from "typeorm";
+import { Column, CreateDateColumn, PrimaryGeneratedColumn } from "typeorm";
 
-import { UserEntity } from "./User";
-
-@Entity("matches")
-export class MatchEntity {
+export abstract class MatchEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
@@ -30,16 +20,7 @@ export class MatchEntity {
   randomAbilityId: string;
 
   @Column("text")
-  userId: string;
-
-  @Column("text")
   status: "in-progress" | "finished";
-
-  @JoinColumn({
-    name: "userId",
-  })
-  @ManyToOne(() => UserEntity)
-  user: UserEntity;
 
   @CreateDateColumn()
   createdAt: Date;
